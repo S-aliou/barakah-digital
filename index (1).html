@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barakah Productivity Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D9E75;
+    --teal-light: #E8F7F1;
+    --teal-mid: #9FD9C3;
+    --dark: #0F1A14;
+    --mid: #3D5446;
+    --grey: #8A9E94;
+    --border: #D4E8DC;
+    --cream: #FAF8F4;
+    --white: #FFFFFF;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); overflow-x: hidden; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 80px 24px 60px;
+    position: relative; overflow: hidden; background: var(--dark);
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #1D9E7522 0%, transparent 70%);
+  }
+  .hero-pattern {
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 60px, #1D9E7508 60px, #1D9E7508 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, #1D9E7508 60px, #1D9E7508 61px);
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 760px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal);
+    border: 1px solid #1D9E7540; padding: 6px 16px; border-radius: 100px;
+    margin-bottom: 32px; background: #1D9E7510;
+  }
+  .arabic-top { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--teal-mid); margin-bottom: 20px; }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 6vw, 68px);
+    font-weight: 300; line-height: 1.15; color: var(--white); margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; color: var(--teal-mid); }
+  .hero-sub { font-size: 17px; font-weight: 300; color: var(--grey); line-height: 1.7; max-width: 560px; margin: 0 auto 40px; }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--teal); color: white; font-size: 15px; font-weight: 500;
+    padding: 16px 36px; border-radius: 4px; text-decoration: none; transition: all 0.2s;
+  }
+  .hero-cta:hover { background: #179065; transform: translateY(-2px); }
+  .hero-price { margin-top: 16px; font-size: 13px; color: var(--grey); }
+  .hero-price s { color: #4a6557; }
+  .hero-price strong { color: var(--teal-mid); }
+
+  /* SECTIONS */
+  section { padding: 80px 24px; }
+  .container { max-width: 760px; margin: 0 auto; }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 4vw, 44px); font-weight: 400; line-height: 1.2; color: var(--dark); margin-bottom: 20px; }
+  .section-body { font-size: 16px; font-weight: 300; color: var(--mid); line-height: 1.8; }
+
+  /* PAIN */
+  .pain { background: var(--white); }
+  .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+  .pain-card { border: 1px solid var(--border); border-radius: 8px; padding: 24px; background: var(--cream); position: relative; overflow: hidden; }
+  .pain-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--teal); opacity: 0.3; }
+  .pain-card p { font-size: 14px; font-weight: 300; color: var(--mid); line-height: 1.7; }
+
+  /* QUOTE */
+  .quoteblock { background: var(--teal); padding: 60px 24px; text-align: center; }
+  .quoteblock blockquote { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 3vw, 30px); font-weight: 300; font-style: italic; color: white; max-width: 640px; margin: 0 auto 16px; line-height: 1.5; }
+  .quoteblock cite { font-size: 13px; color: #9FD9C3; letter-spacing: 0.05em; }
+
+  /* FEATURES */
+  .features { background: var(--dark); }
+  .features .section-title { color: var(--white); }
+  .features .section-body { color: var(--grey); }
+  .features-list { margin-top: 48px; }
+  .feature-item { display: grid; grid-template-columns: 48px 1fr; gap: 20px; align-items: start; padding: 24px 0; border-bottom: 1px solid #1D9E7515; }
+  .feature-item:last-child { border-bottom: none; }
+  .feature-num { width: 44px; height: 44px; border: 1px solid #1D9E7540; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--teal); flex-shrink: 0; }
+  .feature-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--white); margin-bottom: 4px; }
+  .feature-desc { font-size: 14px; font-weight: 300; color: var(--grey); line-height: 1.6; }
+
+  /* FOR WHO */
+  .forwho { background: var(--cream); }
+  .forwho-list { margin-top: 36px; display: flex; flex-direction: column; gap: 14px; }
+  .forwho-item { display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; }
+  .check { width: 22px; height: 22px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .check svg { width: 12px; height: 12px; stroke: white; fill: none; stroke-width: 2.5; }
+  .forwho-item p { font-size: 15px; font-weight: 300; color: var(--mid); line-height: 1.6; }
+
+  /* PRICING */
+  .pricing { background: var(--white); }
+  .price-box { border: 1px solid var(--border); border-radius: 12px; padding: 48px; max-width: 480px; margin: 40px auto 0; text-align: center; background: var(--cream); position: relative; overflow: hidden; }
+  .price-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--teal); }
+  .launch-tag { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); background: var(--teal-light); padding: 4px 12px; border-radius: 100px; margin-bottom: 20px; }
+  .price-original { font-size: 15px; color: var(--grey); text-decoration: line-through; margin-bottom: 4px; }
+  .price-main { font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300; color: var(--dark); line-height: 1; margin-bottom: 4px; }
+  .price-convert { font-size: 14px; color: var(--grey); margin-bottom: 28px; }
+  .buy-btn { display: block; width: 100%; padding: 16px; background: var(--teal); color: white; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; transition: all 0.2s; margin-bottom: 12px; }
+  .buy-btn:hover { background: #179065; transform: translateY(-1px); }
+  .price-note { font-size: 12px; color: var(--grey); line-height: 1.6; }
+
+  /* TRUST */
+  .trust { background: var(--cream); }
+  .trust-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+  .trust-item { display: flex; align-items: flex-start; gap: 12px; padding: 20px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; }
+  .trust-icon { width: 36px; height: 36px; background: var(--teal-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .trust-icon svg { width: 18px; height: 18px; stroke: var(--teal); fill: none; stroke-width: 1.8; }
+  .trust-title { font-size: 13px; font-weight: 500; color: var(--dark); margin-bottom: 2px; }
+  .trust-desc { font-size: 12px; font-weight: 300; color: var(--grey); line-height: 1.5; }
+
+  /* FAQ */
+  .faq { background: var(--white); }
+  .faq-list { margin-top: 40px; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+  .faq-q { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; color: var(--dark); margin-bottom: 8px; }
+  .faq-a { font-size: 14px; font-weight: 300; color: var(--mid); line-height: 1.7; }
+
+  /* CLOSING */
+  .closing { background: var(--dark); padding: 80px 24px; text-align: center; }
+  .closing-arabic { font-family: 'Cormorant Garamond', serif; font-size: 36px; color: var(--teal-mid); margin-bottom: 12px; }
+  .closing-trans { font-size: 14px; font-weight: 300; color: var(--grey); margin-bottom: 40px; }
+  .closing .buy-btn { max-width: 360px; margin: 0 auto 12px; display: block; }
+  .closing .price-note { color: #4a6557; }
+
+  footer { background: var(--dark); border-top: 1px solid #1a2e22; padding: 20px 24px; text-align: center; font-size: 12px; color: #3a5040; }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 600px) {
+    .pain-grid { grid-template-columns: 1fr; }
+    .trust-grid { grid-template-columns: 1fr; }
+    .price-box { padding: 32px 24px; }
+    .feature-item { grid-template-columns: 40px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <div class="badge">✦ Digital Download — Instant Access</div>
+    <div class="arabic-top">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
+    <h1>Finally, a daily planner built for how a <em>Muslim actually lives.</em></h1>
+    <p class="hero-sub">Stop forcing your life into planners made for people who don't pray. The Barakah Productivity Planner organizes your entire day around your salah, your rizq, and your akhira.</p>
+    <a href="#pricing" class="hero-cta">
+      Get instant access
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <p class="hero-price"><s>7,500 CFA</s> &rarr; <strong>5,000 CFA / ~$8 / ~&euro;7 &mdash; Launch price</strong></p>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">The problem</div>
+      <h2 class="section-title">Does this sound familiar?</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card reveal">
+        <p>You start the day with good intentions &mdash; but by Dhuhr time, everything feels scattered and you've barely done anything meaningful.</p>
+      </div>
+      <div class="pain-card reveal">
+        <p>You've tried generic planners and apps &mdash; but none of them account for salah times, Jumu'ah, or the rizq mindset Islam teaches.</p>
+      </div>
+      <div class="pain-card reveal">
+        <p>You want to grow your business or career &mdash; but you feel guilty when dunya goals push your deen goals aside.</p>
+      </div>
+      <div class="pain-card reveal">
+        <p>Every week you tell yourself &ldquo;next week I'll be more organized&rdquo; &mdash; but the cycle keeps repeating.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quoteblock">
+  <blockquote class="reveal">&ldquo;The strong believer is better and more beloved to Allah than the weak believer, while there is good in both.&rdquo;</blockquote>
+  <cite class="reveal">&mdash; Prophet Muhammad (SAW)</cite>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label" style="color: var(--teal-mid);">What's inside</div>
+      <h2 class="section-title">Everything you need to build a life of barakah</h2>
+      <p class="section-body">10 pages. Designed for daily use. Built around your faith.</p>
+    </div>
+    <div class="features-list">
+
+      <div class="feature-item reveal">
+        <div class="feature-num">1</div>
+        <div>
+          <div class="feature-title">Bismillah intention page</div>
+          <div class="feature-desc">Set your niyyah before you begin. Every action becomes ibadah when done with the right intention.</div>
+        </div>
+      </div>
+
+      <div class="feature-item reveal">
+        <div class="feature-num">2</div>
+        <div>
+          <div class="feature-title">Vision &amp; goals &mdash; deen + dunya</div>
+          <div class="feature-desc">Plan your month with goals for both your faith and your worldly ambitions, side by side.</div>
+        </div>
+      </div>
+
+      <div class="feature-item reveal">
+        <div class="feature-num">3</div>
+        <div>
+          <div class="feature-title">Salah-structured daily schedule</div>
+          <div class="feature-desc">Your day is built around Fajr, Dhuhr, Asr, Maghrib and Isha &mdash; not the other way around.</div>
+        </div>
+      </div>
+
+      <div class="feature-item reveal">
+        <div class="feature-num">4</div>
+        <div>
+          <div class="feature-title">Top 3 priorities + nafs check</div>
+          <div class="feature-desc">Daily focus system with a built-in reminder to guard yourself against distraction and ego.</div>
+        </div>
+      </div>
+
+      <div class="feature-item reveal">
+        <div class="feature-num">5</div>
+        <div>
+          <div class="feature-title">Rizq tracker + gratitude log</div>
+          <div class="feature-desc">Track your income goals with a mindset of shukr. Includes space for your sadaqah commitment.</div>
+        </div>
+      </div>
+
+      <div class="feature-item reveal">
+        <div class="feature-num">6</div>
+        <div>
+          <div class="feature-title">Halal health habit tracker</div>
+          <div class="feature-desc">7-day grid for water, halal eating, exercise, sleep and Quran recitation.</div>
+        </div>
+      </div>
+
+      <div class="feature-item reveal">
+        <div class="feature-num">7</div>
+        <div>
+          <div class="feature-title">Muhasaba evening reflection</div>
+          <div class="feature-desc">End each day with honest self-audit. What did you do? What will you improve?</div>
+        </div>
+      </div>
+
+      <div class="feature-item reveal">
+        <div class="feature-num">8</div>
+        <div>
+          <div class="feature-title">Weekly review with metrics</div>
+          <div class="feature-desc">Track your wins, salah streak, rizq and growth every Friday.</div>
+        </div>
+      </div>
+
+      <div class="feature-item reveal">
+        <div class="feature-num">9</div>
+        <div>
+          <div class="feature-title">Morning duas + affirmations</div>
+          <div class="feature-desc">Start each day with authentic duas and powerful halal affirmations that rewire your mindset.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHO -->
+<section class="forwho">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Is this for you?</div>
+      <h2 class="section-title">This planner is for you if...</h2>
+    </div>
+    <div class="forwho-list">
+
+      <div class="forwho-item reveal">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <p>You want your days to feel intentional, not chaotic.</p>
+      </div>
+
+      <div class="forwho-item reveal">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <p>You are building something &mdash; a business, a career, a better version of yourself.</p>
+      </div>
+
+      <div class="forwho-item reveal">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <p>You want to stay consistent with salah while chasing your goals.</p>
+      </div>
+
+      <div class="forwho-item reveal">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <p>You are tired of planners that have nothing to do with your values.</p>
+      </div>
+
+      <div class="forwho-item reveal">
+        <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <p>You believe barakah comes from alignment between deen and action.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <div class="section-label">Get the planner</div>
+      <h2 class="section-title">One purchase. Lifetime value.</h2>
+      <p class="section-body">Reuse it every month. Print a new copy or fill it digitally.</p>
+    </div>
+    <div class="price-box reveal">
+      <div class="launch-tag">✦ Launch price &mdash; limited time</div>
+      <div class="price-original">7,500 CFA</div>
+      <div class="price-main">5,000 CFA</div>
+      <div class="price-convert">~$8 USD &nbsp;&middot;&nbsp; ~&euro;7 EUR</div>
+      <a href="#" class="buy-btn">Get instant access &mdash; 5,000 CFA</a>
+      <p class="price-note">Pay with Wave, Orange Money or card via Chariow.<br>Instant PDF download after payment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Why trust this</div>
+      <h2 class="section-title">Built with integrity</h2>
+    </div>
+    <div class="trust-grid">
+
+      <div class="trust-item reveal">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="trust-title">100% Halal</div>
+          <div class="trust-desc">No interest, no haram content, no compromises.</div>
+        </div>
+      </div>
+
+      <div class="trust-item reveal">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div>
+          <div class="trust-title">Instant delivery</div>
+          <div class="trust-desc">Download your PDF immediately after payment.</div>
+        </div>
+      </div>
+
+      <div class="trust-item reveal">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+          <div class="trust-title">Works everywhere</div>
+          <div class="trust-desc">Phone, tablet or laptop &mdash; print it or use digitally.</div>
+        </div>
+      </div>
+
+      <div class="trust-item reveal">
+        <div class="trust-icon">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+        </div>
+        <div>
+          <div class="trust-title">Reusable monthly</div>
+          <div class="trust-desc">Pay once &mdash; use it every single month forever.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Questions</div>
+      <h2 class="section-title">Common questions</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item reveal">
+        <div class="faq-q">Is this a physical product?</div>
+        <div class="faq-a">No &mdash; it's a digital PDF you download instantly after payment. You can print it at home or use it on any device.</div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">Can I use it every month?</div>
+        <div class="faq-a">Yes. Pay once and reuse it every month. Just print a new copy or refill it digitally on your device.</div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">Is it available in French?</div>
+        <div class="faq-a">The current version is in English. A French version for West Africa is coming soon &mdash; purchase now to get early access when it launches.</div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">How do I pay?</div>
+        <div class="faq-a">You can pay with Wave, Orange Money, or card &mdash; all processed securely through Chariow.</div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">What if I'm not satisfied?</div>
+        <div class="faq-a">Reach out within 7 days and we'll make it right. Your satisfaction and trust matter more than the sale.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="container">
+    <div class="closing-arabic reveal">&#1576;&#1614;&#1575;&#1585;&#1614;&#1603;&#1ى اللَّهُ فِيكَ</div>
+    <div class="closing-trans reveal">May Allah bless you in everything you build.</div>
+    <a href="#pricing" class="buy-btn reveal">Get the Barakah Planner &mdash; 5,000 CFA</a>
+    <p class="price-note reveal">~$8 USD &middot; ~&euro;7 EUR &nbsp;&middot;&nbsp; Instant download &nbsp;&middot;&nbsp; Wave / Orange Money / Card</p>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 Barakah Digital &nbsp;&middot;&nbsp; All rights reserved &nbsp;&middot;&nbsp; Halal digital products
+</footer>
+
+<script>
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry, i) {
+      if (entry.isIntersecting) {
+        setTimeout(function() { entry.target.classList.add('visible'); }, i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(function(el) { observer.observe(el); });
+</script>
+
+</body>
+</html>
